@@ -51,8 +51,50 @@ func (bstn *binarySearchTreeNode) put(data Comparable) *binarySearchTreeNode {
 }
 
 func (bst *BinarySearchTree) Remove(data Comparable) {
-	// TODO
-	// bst.size -= 1
+	// If the tree contains duplicate entries of "data", only the
+	// first occurrence found starting from the root is removed
+	if bst.Contains(data) {
+		bst.root = bst.root.remove(data, false)
+		bst.size -= 1
+	}
+}
+
+func (bstn *binarySearchTreeNode) remove(data Comparable, done bool) *binarySearchTreeNode {
+	if nil == bstn {
+		return nil
+	}
+
+	if data.Compare(bstn.data) < 0 || data.Compare(bstn.data) == 0 && done {
+		bstn.left = bstn.left.remove(data, done)
+	} else if data.Compare(bstn.data) > 0 {
+		bstn.right = bstn.right.remove(data, done)
+	} else {
+		if bstn.left != nil && bstn.right != nil {
+			var prev *binarySearchTreeNode
+			var curr *binarySearchTreeNode = bstn.left
+
+			for curr != nil && curr.right != nil {
+				prev = curr
+				curr = curr.right
+			}
+
+			if prev != nil && curr != nil {
+				prev.right = curr.left
+			}
+
+			curr.left = bstn.left.remove(data, true)
+			curr.right = bstn.right.remove(data, true)
+			return curr
+		} else if bstn.left != nil {
+			return bstn.left
+		} else if bstn.right != nil {
+			return bstn.right
+		} else {
+			return nil
+		}
+	}
+
+	return bstn
 }
 
 func (bst *BinarySearchTree) Size() int {
