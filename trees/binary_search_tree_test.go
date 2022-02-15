@@ -161,6 +161,12 @@ func TestRemove(t *testing.T) {
 		bst.Size() == 18) {
 		t.Error("Remove() fails when removing a node with a duplicate (100)")
 	}
+
+	err := bst.Remove(comparableInteger{247})
+
+	if err == nil {
+		t.Error("Remove() fails when removing a node with a data value that is not in the tree - it doesn't return an error like it ought to")
+	}
 }
 
 func TestIsEmpty(t *testing.T) {

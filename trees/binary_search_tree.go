@@ -1,5 +1,7 @@
 package trees
 
+import "fmt"
+
 type binarySearchTreeNode struct {
 	data  Comparable
 	left  *binarySearchTreeNode
@@ -50,13 +52,17 @@ func (bstn *binarySearchTreeNode) put(data Comparable) *binarySearchTreeNode {
 	return bstn
 }
 
-func (bst *BinarySearchTree) Remove(data Comparable) {
+func (bst *BinarySearchTree) Remove(data Comparable) error {
 	// If the tree contains duplicate entries of "data", only the
 	// first occurrence found starting from the root is removed
-	if bst.Contains(data) {
-		bst.root = bst.root.remove(data, false)
-		bst.size -= 1
+
+	if !bst.Contains(data) {
+		return fmt.Errorf("%v cannot be removed because it is not in the BinarySearchTree", data)
 	}
+
+	bst.root = bst.root.remove(data, false)
+	bst.size -= 1
+	return nil
 }
 
 func (bstn *binarySearchTreeNode) remove(data Comparable, done bool) *binarySearchTreeNode {
